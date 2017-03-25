@@ -1,0 +1,6 @@
+#include <types.h>
+#include <lib.h>
+#include <addrspace.h>
+
+void print_segment_info (int nsegment, vaddr_t vbase, paddr_t pbase, size_t npages);
+void print_stack_info (paddr_t stackpbase);
