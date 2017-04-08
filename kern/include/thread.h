@@ -39,6 +39,7 @@
 #include <array.h>
 #include <spinlock.h>
 #include <threadlist.h>
+#include "opt-syscalls.h"
 
 struct cpu;
 
@@ -106,6 +107,11 @@ struct thread {
 	 */
 
 	/* add more here as needed */
+	#if OPT_SYSCALLS
+	int t_exit_code; 	/* Exit code set during sys_exit syscall */
+	#endif
+	
+
 };
 
 /*

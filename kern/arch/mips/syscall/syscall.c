@@ -38,6 +38,7 @@
 #include "opt-syscalls.h"
 #if OPT_SYSCALLS
 #include <stdio_syscalls.h>
+#include <thread_syscalls.h>
 #endif
 
 /*
@@ -115,10 +116,17 @@ syscall(struct trapframe *tf)
 	    /* Add stuff here */
 
 	#if OPT_SYSCALLS
-	    case SYS_write:
-		err = sys_write((char*)tf->tf_a1,
+		case SYS_write:
+			err = sys_write((char*)tf->tf_a1,
 				(size_t)tf->tf_a2);
-		break;
+			break;
+ 		case SYS_read:
+			err = sys_read((char*)tf->tf_a1,
+				(size_t)tf->tf_a2);
+			break;
+		case SYS__exit:
+			err = sys_exit(tf->tf_a0);
+			break; 	
 	#endif
 
 

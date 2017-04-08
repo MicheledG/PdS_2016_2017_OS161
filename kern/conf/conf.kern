@@ -404,10 +404,11 @@ defoption threads
 optfile   threads  main/addrspace_info.c
 
 #
-# syscalls (lab01)
+# syscalls (lab01 + lab02)
 #
-defoption syscalls
-optfile   syscalls  syscall/stdio_syscalls.c
+defoption 	syscalls
+optfile		syscalls	syscall/stdio_syscalls.c
+optfile 	syscalls	syscall/thread_syscalls.c 
 
 
 ########################################

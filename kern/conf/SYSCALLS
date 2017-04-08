@@ -33,5 +33,5 @@ options dumbvm			# Chewing gum and baling wire.
 
 options threads			# print info about segments' addrspace
 
-options syscalls		# implements sys_write and sys_read
+options syscalls		# implements sys_write, sys_read, sys_exit
 
