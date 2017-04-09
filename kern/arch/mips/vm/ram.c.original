@@ -31,19 +31,12 @@
 #include <lib.h>
 #include <vm.h>
 #include <mainbus.h>
-#include "opt-ram_allocator.h"
+
 
 vaddr_t firstfree;   /* first free virtual address; set by start.S */
 
 static paddr_t firstpaddr;  /* address of first free physical page */
 static paddr_t lastpaddr;   /* one past end of last free physical page */
-
-#if OPT_RAM_ALLOCATOR
-#define FRAMES_NUMBER 256	/* 256 * 4096 ->  1MB: number of frames of the physical ram, depends on the ram size configured in sys161.conf file */
-static bool free_frames[FRAMES_NUMBER];  /* vector of flags that indicates if a frame is free or not */
-static int first_valid_frame_index; /* index of free_frames vector which indicates the initial first free frame, derived by initial firstpaddr */
-#endif
-
 
 /*
  * Called very early in system boot to figure out how much physical
@@ -75,22 +68,6 @@ ram_bootstrap(void)
 	 * Convert to physical address.
 	 */
 	firstpaddr = firstfree - MIPS_KSEG0;
-	
-	#if OPT_RAM_ALLOCATOR
-	/* Initialize free_frames vector */
-	int frame_index = 0;
-	first_valid_frame_index = firstpaddr / PAGE_SIZE;
-	
-	for (; frame_index < FRAMES_NUMBER; frame_index++) {
-		if(frame_index < first_valid_frame_index){
-			free_frames[frame_index] = false;		
-		}
-		else {
-			free_frames[frame_index] = true;
-		}						
-	} 
-
-	#endif	
 
 	kprintf("%uk physical memory available\n",
 		(lastpaddr-firstpaddr)/1024);
@@ -117,66 +94,9 @@ ram_bootstrap(void)
 paddr_t
 ram_stealmem(unsigned long npages)
 {
-	
-	#if OPT_RAM_ALLOCATOR
-	kprintf("HELLO FROM NEW RAM_STEALMEM VERSION!!!");	
-	unsigned int frame_index = first_valid_frame_index;
-	bool allocated = false;
-	
-	while(!allocated){
-		
-		/* find the first free frame */
-		while(!free_frames[frame_index] && frame_index < FRAMES_NUMBER){
-			frame_index++;		
-		}
-		
-		/* check if we have not found a free frame */
-		if (frame_index == FRAMES_NUMBER) {
-			/* NO FRAME FOUND! */
-			return 0;		
-		}
-			
-		/* check if there are enough contigous free frames */
-		unsigned int count = 0;
-		while(free_frames[frame_index] && frame_index < FRAMES_NUMBER && count < npages){
-			count++;
-			frame_index++;		
-		}
-
-		/* check if we have exceeded free_frame size */
-		if (frame_index == FRAMES_NUMBER) {
-			/* NOT ENOUGH SPACE! */
-			return 0;		
-		}
-		
-		/* check if the block is big enough */
-		if (count < npages) {
-			/* NOT ENOUGH SPACE! */
-			/* look for an other free chunk */			
-			continue;
-		}
-		
-		/* WE HAVE FOUND A SUITABLE CHUNCK OF RAM */
-		allocated = true;
-		//break;
-	}
-	
-	/* compute physical address of the first free frame "allocated" */
-	unsigned int first_frame_index = frame_index - npages;
-	paddr_t paddr = frame_index * PAGE_SIZE;
-		
-	/* update free_frame vector */	
-	for(frame_index = first_frame_index; frame_index < first_frame_index+npages; frame_index++){
-		free_frames[frame_index] = false;	
-	} 	
-	
-	return paddr;
-	#else	
-	/*original ram_stealmem implementation */	
-	kprintf("HELLO FROM OLD RAM_STEALMEM VERSION!!!");	
 	size_t size;
-	paddr_t paddr;	
-	
+	paddr_t paddr;
+
 	size = npages * PAGE_SIZE;
 
 	if (firstpaddr + size > lastpaddr) {
@@ -186,9 +106,7 @@ ram_stealmem(unsigned long npages)
 	paddr = firstpaddr;
 	firstpaddr += size;
 
-	return paddr;	
-
-	#endif	
+	return paddr;
 }
 
 /*

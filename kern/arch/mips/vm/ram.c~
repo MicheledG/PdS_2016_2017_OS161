@@ -162,7 +162,7 @@ ram_stealmem(unsigned long npages)
 	}
 	
 	/* compute physical address of the first free frame "allocated" */
-	unsigned int first_frame_index = frame_index - npages;
+	unsigned int first_frame_index = frame_index - (npages);
 	paddr_t paddr = frame_index * PAGE_SIZE;
 		
 	/* update free_frame vector */	
