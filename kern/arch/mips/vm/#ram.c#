@@ -119,7 +119,8 @@ ram_stealmem(unsigned long npages)
 {
 	
 	#if OPT_RAM_ALLOCATOR
-	unsigned int frame_index = 240;//first_valid_frame_index;
+	kprintf("HELLO FROM NEW RAM_STEALMEM VERSION!!!");	
+	unsigned int frame_index = first_valid_frame_index;
 	bool allocated = false;
 	
 	while(!allocated){
@@ -173,7 +174,8 @@ ram_stealmem(unsigned long npages)
 	
 	return paddr;
 	#else	
-	/*original ram_stealmem implementation */		
+	/*original ram_stealmem implementation */	
+	kprintf("HELLO FROM OLD RAM_STEALMEM VERSION!!!");	
 	size_t size;
 	paddr_t paddr;	
 	

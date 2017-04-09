@@ -119,7 +119,6 @@ ram_stealmem(unsigned long npages)
 {
 	
 	#if OPT_RAM_ALLOCATOR
-	kprintf("HELLO FROM NEW RAM_STEALMEM VERSION!!!");	
 	unsigned int frame_index = first_valid_frame_index;
 	bool allocated = false;
 	
@@ -143,17 +142,19 @@ ram_stealmem(unsigned long npages)
 			frame_index++;		
 		}
 
-		/* check if we have exceeded free_frame size */
-		if (frame_index == FRAMES_NUMBER) {
-			/* NOT ENOUGH SPACE! */
-			return 0;		
-		}
 		
-		/* check if the block is big enough */
+		/* check if the block is not big enough */
 		if (count < npages) {
 			/* NOT ENOUGH SPACE! */
-			/* look for an other free chunk */			
-			continue;
+			/* check if we have exceeded free_frame size */
+			if (frame_index == FRAMES_NUMBER) {
+				/* FREE FRAMES VECTOR TERMINATED */
+				return 0;		
+			}
+			else{
+				/* look for an other free chunk */			
+				continue;			
+			}			
 		}
 		
 		/* WE HAVE FOUND A SUITABLE CHUNCK OF RAM */
@@ -172,8 +173,7 @@ ram_stealmem(unsigned long npages)
 	
 	return paddr;
 	#else	
-	/*original ram_stealmem implementation */	
-	kprintf("HELLO FROM OLD RAM_STEALMEM VERSION!!!");	
+	/*original ram_stealmem implementation */		
 	size_t size;
 	paddr_t paddr;	
 	
