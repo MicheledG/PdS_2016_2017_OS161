@@ -132,7 +132,6 @@ struct tlbshootdown {
 #################################################
 */
 
-#include "opt-ram_allocator.h"
 #if OPT_RAM_ALLOCATOR
 /*
  * This function is for mark frames in RAM as free

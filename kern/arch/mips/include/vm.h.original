@@ -30,6 +30,7 @@
 #ifndef _MIPS_VM_H_
 #define _MIPS_VM_H_
 
+
 /*
  * Machine-dependent VM system definitions.
  */
@@ -123,24 +124,6 @@ struct tlbshootdown {
 };
 
 #define TLBSHOOTDOWN_MAX 16
-
-/* 
-#################################################
-#                                               #
-#		LAB02_RAM_ALLOCATOR!!!!!!!!!!!!!!       #
-#                                               #
-#################################################
-*/
-
-#include "opt-ram_allocator.h"
-#if OPT_RAM_ALLOCATOR
-/*
- * This function is for mark frames in RAM as free
- * 
- */
-paddr_t ram_freemem(paddr_t paddr, unsigned long npages);
-#endif
-
 
 
 #endif /* _MIPS_VM_H_ */

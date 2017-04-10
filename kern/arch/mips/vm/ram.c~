@@ -39,9 +39,10 @@ static paddr_t firstpaddr;  /* address of first free physical page */
 static paddr_t lastpaddr;   /* one past end of last free physical page */
 
 #if OPT_RAM_ALLOCATOR
-#define FRAMES_NUMBER 256	/* 256 * 4096 ->  1MB: number of frames of the physical ram, depends on the ram size configured in sys161.conf file */
+#define FRAMES_NUMBER  256	/* 256 * 4096 ->  1MB: number of frames of the physical ram, depends on the ram size configured in sys161.conf file */
 static bool free_frames[FRAMES_NUMBER];  /* vector of flags that indicates if a frame is free or not */
-static int first_valid_frame_index; /* index of free_frames vector which indicates the initial first free frame, derived by initial firstpaddr */
+static unsigned int first_valid_frame_index; /* index of free_frames vector which indicates the initial first free frame, derived by initial firstpaddr */
+paddr_t ram_freemem(paddr_t paddr, unsigned long npages);
 #endif
 
 
@@ -78,7 +79,7 @@ ram_bootstrap(void)
 	
 	#if OPT_RAM_ALLOCATOR
 	/* Initialize free_frames vector */
-	int frame_index = 0;
+	unsigned int frame_index = 0;
 	first_valid_frame_index = firstpaddr / PAGE_SIZE;
 	
 	for (; frame_index < FRAMES_NUMBER; frame_index++) {
@@ -119,7 +120,7 @@ ram_stealmem(unsigned long npages)
 {
 	
 	#if OPT_RAM_ALLOCATOR
-	unsigned int frame_index = 240;//first_valid_frame_index;
+	unsigned int frame_index = first_valid_frame_index;
 	bool allocated = false;
 	
 	while(!allocated){
@@ -190,6 +191,36 @@ ram_stealmem(unsigned long npages)
 
 	#endif	
 }
+
+#if OPT_RAM_ALLOCATOR
+/*
+ * This function is for mark frames in RAM as free
+ * 
+ */
+paddr_t
+ram_freemem(paddr_t paddr, unsigned long npages)
+{
+	
+	
+	unsigned int frame_index = paddr/PAGE_SIZE;
+	unsigned int last_frame_index = frame_index + npages - 1;	
+	
+	/* check the validiy of frames interval */
+	if(frame_index < first_valid_frame_index)
+		return 1;
+	if(!(last_frame_index < FRAMES_NUMBER))
+		return 1;	
+	
+	
+	/* update free_frame vector */	
+	for(; frame_index <= last_frame_index; frame_index++){
+		free_frames[frame_index] = true;	
+	} 	
+	
+	return 0;	
+}
+#endif
+
 
 /*
  * This function is intended to be called by the VM system when it

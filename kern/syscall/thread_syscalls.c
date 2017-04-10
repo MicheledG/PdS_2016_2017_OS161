@@ -18,9 +18,10 @@ sys_exit(int status)
 	struct thread *thread = curthread;
 	thread->t_exit_code = status;	
 	//destroy the thread
-	thread_exit();
-	//destroy the process freeing its address space
-	proc_destroy(proc);
+	thread_exit();	
+	//destroy the process freeing its address space -> we can do this: 1 proc only 1 thread
+	proc_destroy(proc);	
+	
 	return 0;	
 
 }

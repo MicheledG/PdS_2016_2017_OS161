@@ -1,33 +1,27 @@
-#include <stdio_syscalls.h>
+#include <thread_syscalls.h>
 
 /*
- * sys_write() system call -> redirected to the console
+ * sys_exit() system call -> close the thread and the associated process cleaning the address space
  *
  */
 int
-sys_write(char* buf, size_t buf_len)
+sys_exit(int status)
 {
+	//get info on the current proc
+	struct proc *proc = curproc;
+	if(proc == NULL){
+		kprintf("NO CURRENT PROCESS!!!");
+		return 1;	
+	}
+	//set the exit code into the thread structure
+	//WHO CAN SEE IT IF THE THREAD IS DESTROYED???
+	struct thread *thread = curthread;
+	thread->t_exit_code = status;	
+	//destroy the process freeing its address space -> we can do this: 1 proc only 1 thread
+	proc_destroy(proc);	
+	//destroy the thread
+	thread_exit();
 	
-	
-	//insert "end of string" in the char vector
-	buf[buf_len] = '\0';
-	kprintf(buf);
-	return 0;	
-
-}
-
-/*
- * sys_write() system call -> take from the console
- *
- */
-int
-sys_read(char* buf, size_t buf_len)
-{
-	
-	
-	//insert "end of string" in the char vector
-	buf[buf_len] = '\0';
-	kgets(buf, buf_len);
 	return 0;	
 
 }
