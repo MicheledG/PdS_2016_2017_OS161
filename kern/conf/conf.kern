@@ -415,6 +415,10 @@ optfile 	syscalls	syscall/thread_syscalls.c
 #
 defoption 	ram_allocator
 
+#
+# sync (lab03)
+#
+defoption sync
 
 ########################################
 #                                      #

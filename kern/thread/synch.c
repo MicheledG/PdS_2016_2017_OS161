@@ -153,8 +153,22 @@ lock_create(const char *name)
                 kfree(lock);
                 return NULL;
         }
+		
+		// add stuff here as needed
+		#if OPT_SYNC
 
-        // add stuff here as needed
+		lock->lk_wchan = wchan_create(lock->lk_name);
+		if (lock->lk_wchan == NULL) {
+			kfree(lock->lk_name);
+			kfree(lock);
+			return NULL;
+		}
+
+		spinlock_init(&lock->lk_lock);
+		//initially no one owns the lock        
+		lock->lk_thread = NULL;		
+		lock->lk_locked = false;
+		#endif
 
         return lock;
 }
@@ -165,6 +179,11 @@ lock_destroy(struct lock *lock)
         KASSERT(lock != NULL);
 
         // add stuff here as needed
+		#if OPT_SYNC
+		/* wchan_cleanup will assert if anyone's waiting on it */
+		spinlock_cleanup(&lock->lk_lock);
+		wchan_destroy(lock->lk_wchan);		
+		#endif		
 
         kfree(lock->lk_name);
         kfree(lock);
@@ -174,26 +193,84 @@ void
 lock_acquire(struct lock *lock)
 {
         // Write this
+		#if OPT_SYNC
+		KASSERT(lock != NULL);
+		/*
+         * May not block in an interrupt handler.
+         *
+         * For robustness, always check, even if we can actually
+         * complete the lock_acquire without blocking.
+         */
+        KASSERT(curthread->t_in_interrupt == false);		
+		
+		/* Use the lock spinlock to protect all the data structure inside the lock struct*/
+		spinlock_acquire(&lock->lk_lock); //this is blocking
+		
+		//if the lock is already locked and the owner of the lock is already the curren thread we have a kernel error -> we should release before re-acquire
+		KASSERT(!lock->lk_locked || lock->lk_thread != curthread);    	
 
+		while (lock->lk_locked) {
+			wchan_sleep(lock->lk_wchan, &lock->lk_lock);
+        }
+        KASSERT(!lock->lk_locked);
+		//really acquire the lock        
+		lock->lk_thread = curthread;		
+		lock->lk_locked = true;
+		spinlock_release(&lock->lk_lock);		
+		#else
         (void)lock;  // suppress warning until code gets written
+		#endif
 }
 
 void
 lock_release(struct lock *lock)
 {
         // Write this
+		#if OPT_SYNC
+		KASSERT(lock != NULL);
+		
+		spinlock_acquire(&lock->lk_lock);
+		
+		KASSERT(lock->lk_thread == curthread);		
+		
+		//really release the lock
+		lock->lk_thread = NULL;
+		lock->lk_locked = false;        
+		
+        KASSERT(!lock->lk_locked);
+		wchan_wakeone(lock->lk_wchan, &lock->lk_lock);
 
+		spinlock_release(&lock->lk_lock);
+		#else
         (void)lock;  // suppress warning until code gets written
+		#endif
+		
 }
 
 bool
 lock_do_i_hold(struct lock *lock)
 {
         // Write this
+		#if OPT_SYNC
+		KASSERT(lock != NULL);
+		
+		spinlock_acquire(&lock->lk_lock);
+		
+		bool do_i_hold = false;
 
+		if(lock->lk_locked){
+			if(lock->lk_thread == curthread){
+				do_i_hold = true;			
+			}
+		}		
+		
+		spinlock_release(&lock->lk_lock);
+		return do_i_hold;		
+		#else		
         (void)lock;  // suppress warning until code gets written
 
         return true; // dummy until code gets written
+		#endif
 }
 
 ////////////////////////////////////////////////////////////
