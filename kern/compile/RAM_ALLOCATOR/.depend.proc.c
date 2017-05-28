@@ -8,4 +8,4 @@ proc.o: ../../proc/proc.c ../../include/types.h \
  ../../include/threadlist.h opt-syscalls.h includelinks/machine/thread.h \
  ../../include/setjmp.h includelinks/kern/machine/setjmp.h \
  ../../include/addrspace.h ../../include/vm.h includelinks/machine/vm.h \
- opt-dumbvm.h ../../include/vnode.h
+ opt-ram_allocator.h opt-dumbvm.h ../../include/vnode.h

@@ -8,5 +8,6 @@ runprogram.o: ../../syscall/runprogram.c ../../include/types.h \
  ../../include/array.h ../../include/threadlist.h opt-syscalls.h \
  includelinks/machine/thread.h ../../include/setjmp.h \
  includelinks/kern/machine/setjmp.h ../../include/addrspace.h \
- ../../include/vm.h includelinks/machine/vm.h opt-dumbvm.h \
- ../../include/vfs.h ../../include/syscall.h ../../include/test.h
+ ../../include/vm.h includelinks/machine/vm.h opt-ram_allocator.h \
+ opt-dumbvm.h ../../include/vfs.h ../../include/syscall.h \
+ ../../include/test.h

@@ -7,4 +7,4 @@ copyinout.o: ../../vm/copyinout.c ../../include/types.h \
  includelinks/machine/spinlock.h ../../include/threadlist.h \
  opt-syscalls.h includelinks/machine/thread.h ../../include/current.h \
  includelinks/machine/current.h ../../include/vm.h \
- includelinks/machine/vm.h ../../include/copyinout.h
+ includelinks/machine/vm.h opt-ram_allocator.h ../../include/copyinout.h

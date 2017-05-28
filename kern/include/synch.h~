@@ -80,7 +80,10 @@ struct lock {
 		#if OPT_SYNC
 		struct wchan *lk_wchan;
 		struct spinlock lk_lock;
+		// store the thread who acquired the lock
         volatile struct thread* lk_thread;		
+		// store the lock status
+		volatile bool lk_locked; 
 		#endif		
 
 };
