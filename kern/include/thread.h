@@ -106,9 +106,10 @@ struct thread {
 	 * Public fields
 	 */
 
-	/* add more here as needed */
+	/* add more here as needed */	
 	#if OPT_SYSCALLS
-	int t_exit_code; 	/* Exit code set during sys_exit syscall */
+	//moved to struct proc (proc.h)	
+	//int t_exit_code; 	/* Exit code set during sys_exit syscall */
 	#endif
 	
 

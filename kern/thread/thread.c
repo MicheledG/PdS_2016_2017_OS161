@@ -778,12 +778,18 @@ thread_exit(void)
 	struct thread *cur;
 
 	cur = curthread;
-
+	
+	#if OPT_SYSCALLS
+	/*
+		proc_remthread() is called in the sys_exit() syscall
+	*/	
+	#else
 	/*
 	 * Detach from our process. You might need to move this action
 	 * around, depending on how your wait/exit works.
 	 */
 	proc_remthread(cur);
+	#endif	
 
 	/* Make sure we *are* detached (move this only if you're sure!) */
 	KASSERT(cur->t_proc == NULL);

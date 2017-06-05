@@ -81,6 +81,12 @@ proc_create(const char *name)
 
 	/* VFS fields */
 	proc->p_cwd = NULL;
+	
+	#if OPT_SYSCALLS
+	proc->p_sleeplock = lock_create("p_sleeplock");
+	proc->p_cv = cv_create("p_cv");
+	proc->p_is_to_destroy = false;
+	#endif
 
 	return proc;
 }
@@ -167,6 +173,11 @@ proc_destroy(struct proc *proc)
 
 	KASSERT(proc->p_numthreads == 0);
 	spinlock_cleanup(&proc->p_lock);
+	
+	#if OPT_SYSCALLS
+	lock_destroy(proc->p_sleeplock);
+	cv_destroy(proc->p_cv);
+	#endif
 
 	kfree(proc->p_name);
 	kfree(proc);

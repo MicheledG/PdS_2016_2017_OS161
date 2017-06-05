@@ -37,6 +37,10 @@
  */
 
 #include <spinlock.h>
+#include "opt-syscalls.h"
+#if OPT_SYSCALLS
+#include <synch.h>
+#endif
 
 struct addrspace;
 struct thread;
@@ -71,6 +75,13 @@ struct proc {
 	struct vnode *p_cwd;		/* current working directory */
 
 	/* add more material here as needed */
+	#if OPT_SYSCALLS
+	struct lock *p_sleeplock;
+	struct cv *p_cv;
+	int p_exit_code; 	/* Exit code set during sys_exit syscall */
+	volatile bool p_is_to_destroy;
+	#endif
+	
 };
 
 /* This is the process structure for the kernel and for kernel-only threads. */

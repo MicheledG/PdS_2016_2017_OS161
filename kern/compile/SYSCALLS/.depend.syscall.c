@@ -5,8 +5,8 @@ syscall.o: ../../arch/mips/syscall/syscall.c ../../include/types.h \
  opt-noasserts.h includelinks/mips/trapframe.h ../../include/thread.h \
  ../../include/array.h ../../include/spinlock.h \
  includelinks/machine/spinlock.h ../../include/threadlist.h \
- includelinks/machine/thread.h ../../include/setjmp.h \
+ opt-syscalls.h includelinks/machine/thread.h ../../include/setjmp.h \
  includelinks/kern/machine/setjmp.h ../../include/current.h \
- includelinks/machine/current.h ../../include/syscall.h opt-syscalls.h \
+ includelinks/machine/current.h ../../include/syscall.h \
  ../../include/stdio_syscalls.h ../../include/thread_syscalls.h \
- ../../include/proc.h
+ ../../include/proc.h ../../include/synch.h opt-sync.h

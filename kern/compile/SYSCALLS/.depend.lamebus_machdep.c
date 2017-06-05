@@ -5,11 +5,12 @@ lamebus_machdep.o: ../../arch/sys161/dev/lamebus_machdep.c \
  opt-noasserts.h includelinks/mips/specialreg.h \
  includelinks/mips/trapframe.h ../../include/cpu.h \
  ../../include/spinlock.h includelinks/machine/spinlock.h \
- ../../include/threadlist.h includelinks/machine/vm.h ../../include/spl.h \
- ../../include/clock.h ../../include/kern/time.h ../../include/thread.h \
- ../../include/array.h includelinks/machine/thread.h \
- ../../include/setjmp.h includelinks/kern/machine/setjmp.h \
- ../../include/current.h includelinks/machine/current.h \
- ../../include/membar.h includelinks/machine/membar.h \
- ../../include/synch.h ../../include/mainbus.h includelinks/sys161/bus.h \
+ ../../include/threadlist.h includelinks/machine/vm.h opt-ram_allocator.h \
+ ../../include/spl.h ../../include/clock.h ../../include/kern/time.h \
+ ../../include/thread.h ../../include/array.h opt-syscalls.h \
+ includelinks/machine/thread.h ../../include/setjmp.h \
+ includelinks/kern/machine/setjmp.h ../../include/current.h \
+ includelinks/machine/current.h ../../include/membar.h \
+ includelinks/machine/membar.h ../../include/synch.h opt-sync.h \
+ ../../include/mainbus.h includelinks/sys161/bus.h \
  ../../dev/lamebus/lamebus.h autoconf.h
