@@ -9,4 +9,4 @@ syscall.o: ../../arch/mips/syscall/syscall.c ../../include/types.h \
  includelinks/kern/machine/setjmp.h ../../include/current.h \
  includelinks/machine/current.h ../../include/syscall.h \
  ../../include/stdio_syscalls.h ../../include/thread_syscalls.h \
- ../../include/proc.h
+ ../../include/proc.h ../../include/synch.h opt-sync.h

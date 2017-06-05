@@ -9,6 +9,8 @@ menu.o: ../../main/menu.c ../../include/types.h \
  ../../include/spinlock.h includelinks/machine/spinlock.h \
  ../../include/threadlist.h opt-syscalls.h includelinks/machine/thread.h \
  ../../include/setjmp.h includelinks/kern/machine/setjmp.h \
- ../../include/proc.h ../../include/vfs.h ../../include/sfs.h \
- ../../include/fs.h ../../include/vnode.h ../../include/kern/sfs.h \
- ../../include/syscall.h ../../include/test.h opt-sfs.h opt-net.h
+ ../../include/proc.h ../../include/synch.h opt-sync.h \
+ ../../include/vfs.h ../../include/sfs.h ../../include/fs.h \
+ ../../include/vnode.h ../../include/kern/sfs.h ../../include/syscall.h \
+ ../../include/test.h opt-sfs.h opt-net.h ../../include/proc_syscalls.h \
+ ../../include/current.h includelinks/machine/current.h

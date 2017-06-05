@@ -83,8 +83,8 @@ proc_create(const char *name)
 	proc->p_cwd = NULL;
 	
 	#if OPT_SYSCALLS
-	proc->p_sleeplock = lock_create("p_sleeplock");
-	proc->p_cv = cv_create("p_cv");
+	proc->p_sleeplock = lock_create(name);
+	proc->p_cv = cv_create(name);
 	proc->p_is_to_destroy = false;
 	#endif
 
